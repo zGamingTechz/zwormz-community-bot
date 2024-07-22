@@ -8,30 +8,6 @@ from discord.ui import Select
 #from discord_components import DiscordComponents
 
 
-
-
-#---For Gemini---
-import textwrap
-import google_generativeai as genai
-
-apiKey = os.environ['geminiKey']
-genai.configure(api_key=apiKey)
-
-model = genai.GenerativeModel('gemini-pro')
-
-
-def getGeminiResponse(prompt):
-  response = model.generate_content(prompt, stream=True)
-  
-  try:
-      print("AI Response:")
-      for chunk in response:
-          return chunk.text
-  except:
-      return response.prompt_feedback
-
-
-
 #---For lovelace bot---
 import requests
 user_timers = {} # for support command
