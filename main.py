@@ -11,7 +11,7 @@ import csv
 #all the assignments
 #client2 = commands.Bot(command_prefix = "%")
 client2 = discord.Client(intents= discord.Intents.all())
-TOKEN = os.getenv['TOKEN']
+TOKEN = os.getenv('TOKEN')
 
 
 #Login Status & On Ready
