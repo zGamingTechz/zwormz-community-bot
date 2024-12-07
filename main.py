@@ -2,9 +2,7 @@ import discord
 import os
 import time
 import random
-from replit import db
 from keep_alive import keep_alive 
-from discord.ui import Select
 import csv
 #from discord_components import DiscordComponents
 
@@ -14,8 +12,6 @@ import csv
 #client2 = commands.Bot(command_prefix = "%")
 client2 = discord.Client(intents= discord.Intents.all())
 TOKEN = os.getenv['TOKEN']
-db["prefix_zwz"] = "%"  
-
 
 
 #Login Status & On Ready
@@ -46,7 +42,7 @@ async def on_message(message):
 
   msg = message.content
 
-  prefix = db["prefix_zwz"]
+  prefix = "%"
 
 
   
