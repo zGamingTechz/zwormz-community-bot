@@ -13,7 +13,7 @@ import csv
 #all the assignments
 #client2 = commands.Bot(command_prefix = "%")
 client2 = discord.Client(intents= discord.Intents.all())
-TOKEN = os.environ['TOKEN_ZWZ']
+TOKEN = os.getenv['TOKEN']
 db["prefix_zwz"] = "%"  
 
 
