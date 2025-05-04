@@ -533,7 +533,7 @@ async def kick(ctx, member: discord.Member, *, reason=None):
             f"{member.name} will have to play elsewhere now.",
             f"Server population decreased by one: {member.name} is gone!",
             f"{member.name} has been kicked! Maybe they can talk to Plazo about it. iykyk ;)",
-            f"{member.name} got kicked inn the nuts by {ctx.author.name}. Ouch!",
+            f"{member.name} got kicked in the nuts by {ctx.author.name}. Ouch!",
             f"Kryzzp told {ctx.author.name} to kick {member.name}",
             f"{member.name} sacked the roooock!!!!!!",
         ]
