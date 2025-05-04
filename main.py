@@ -4,6 +4,7 @@ import time
 import random
 from keep_alive import keep_alive 
 import csv
+from bot_token import token
 #from discord_components import DiscordComponents
 
 
@@ -11,7 +12,7 @@ import csv
 #all the assignments
 #client2 = commands.Bot(command_prefix = "%")
 client2 = discord.Client(intents= discord.Intents.all())
-TOKEN = os.getenv('TOKEN')
+TOKEN = token
 
 
 #Login Status & On Ready
