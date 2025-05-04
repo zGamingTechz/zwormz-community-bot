@@ -643,5 +643,56 @@ async def ban_error(ctx, error):
         await ctx.send(f"An error occurred: {error}")
 
 
+@bot.command(name='unban')
+@commands.has_permissions(ban_members=True)
+async def unban(ctx, *, member):
+    try:
+        banned_users = await ctx.guild.bans()
+
+        # Check if input is a user ID
+        if member.isdigit():
+            user_id = int(member)
+            for ban_entry in banned_users:
+                if ban_entry.user.id == user_id:
+                    await ctx.guild.unban(ban_entry.user)
+
+                    # List of random unban messages
+                    unban_messages = [
+                        f"{ban_entry.user.name} has been given a second chance! As usual.",
+                        f"{ctx.author.name} simps for {ban_entry.user.name}",
+                        f"The ban has been lifted for {ban_entry.user.name}. Probably begged Plazo",
+                        f"{ban_entry.user.name} managed to convince {ctx.author.name} to unban!",
+                        f"Looks like {ban_entry.user.name} finally apologized enough to get unbanned!",
+                        f"The council has decided: {ban_entry.user.name} deserves redemption!"
+                    ]
+
+                    # Special message if Mandar is doing the unbanning
+                    if ctx.author.id == 745881713661575209:
+                        unban_messages = [
+                            f"Mandar simps for {ban_entry.user.name}!",
+                            f"{ban_entry.user.name} agreed to find a GF for Mandar.",
+                            f"{ban_entry.user.name} bought Mandar a Eula bodypillow ;)",
+                            f"Mandar has decided {ban_entry.user.name} deserves another chance. Probably bought welkin for him."
+                        ]
+
+                    random_message = random.choice(unban_messages)
+                    await ctx.send(random_message)
+                    return
+
+        await ctx.send(f"Could not find a banned user with the name or ID: {member}")
+
+    except ValueError:
+        await ctx.send("Invalid format. Use either a User ID or Username#Discriminator format.")
+
+@unban.error
+async def unban_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"{ctx.author.name} got a big heart but no mod perms, lol.")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Air has been unbanned, now you can breath.")
+    else:
+        await ctx.send(f"An error occurred: {error}")
+
+
 keep_alive()
 bot.run(TOKEN)
