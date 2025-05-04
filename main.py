@@ -153,6 +153,8 @@ async def help_command(ctx):
     embed.add_field(name="%kick", value="To Kick A User", inline=False)
     embed.add_field(name="%ban", value="To Ban A User", inline=False)
     embed.add_field(name="%unban", value="To Unban A User", inline=False)
+    embed.add_field(name="%mute", value="To Mute A User", inline=False)
+    embed.add_field(name="%unmute", value="To Unmute A User", inline=False)
     embed.set_footer(text="Created By Gaming Tech#8837\nExclusively For zWormz Community")
     await ctx.send(embed=embed)
 
