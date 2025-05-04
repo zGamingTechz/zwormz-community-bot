@@ -141,15 +141,18 @@ async def staff(ctx):
 @bot.command(name='help')
 async def help_command(ctx):
     embed = discord.Embed(title="zWormz Bot", description="Best Bot ;)", color=discord.Color.red())
-    embed.add_field(name="%snipe", value="To See Last Deleted Message In A Channel", inline=False)
+    embed.add_field(name="%snipe", value="To See The Last Deleted Message In A Channel", inline=False)
+    embed.add_field(name="%fwords", value="Get The Number Of F-words Used Inn The Server", inline=False)
     embed.add_field(name="%convert", value="To Convert Currencies\n'%help currency' For More Info", inline=False)
     embed.add_field(name="%prefix", value="Just In Case You're Still Wondering", inline=False)
-    embed.add_field(name="%staff", value="A List Of All Staff Members", inline=False)
+    embed.add_field(name="%staff", value="A List Of All The Staff Members", inline=False)
     embed.add_field(name="%yt", value="Link To Kryzzp's Youtube", inline=False)
-    embed.add_field(name="%play guess", value="To Play A Number Guessing Game\nOnly Works In <#710259442318442518>",
-                    inline=False)
-    embed.add_field(name="Other Features-", value="-Custom Member Based Commands Gotta Figure Them Out Yourself",
-                    inline=False)
+    embed.add_field(name="%play guess", value="To Play A Number Guessing Game\nOnly Works In <#710259442318442518>", inline=False)
+    embed.add_field(name="Other Features-", value="-Custom Member Based Commands Gotta Figure Them Out Yourself", inline=False)
+    embed.add_field(name="For Mods:", value="", inline=False)
+    embed.add_field(name="%kick", value="To Kick A User", inline=False)
+    embed.add_field(name="%ban", value="To Ban A User", inline=False)
+    embed.add_field(name="%unban", value="To Unban A User", inline=False)
     embed.set_footer(text="Created By Gaming Tech#8837\nExclusively For zWormz Community")
     await ctx.send(embed=embed)
 
@@ -647,39 +650,42 @@ async def ban_error(ctx, error):
 @commands.has_permissions(ban_members=True)
 async def unban(ctx, *, member):
     try:
-        banned_users = await ctx.guild.bans()
-
         # Check if input is a user ID
         if member.isdigit():
             user_id = int(member)
-            for ban_entry in banned_users:
-                if ban_entry.user.id == user_id:
-                    await ctx.guild.unban(ban_entry.user)
+            user = None
 
-                    # List of random unban messages
+            async for ban_entry in ctx.guild.bans():
+                if ban_entry.user.id == user_id:
+                    user = ban_entry.user
+                    await ctx.guild.unban(user)
+                    break
+
+            if user is not None:
+                # List of random unban messages
+                unban_messages = [
+                    f"{ban_entry.user.name} has been given a second chance! As usual.",
+                    f"{ctx.author.name} simps for {ban_entry.user.name}",
+                    f"The ban has been lifted for {ban_entry.user.name}. Probably begged Plazo",
+                    f"{ban_entry.user.name} managed to convince {ctx.author.name} to unban!",
+                    f"Looks like {ban_entry.user.name} finally apologized enough to get unbanned!",
+                    f"The council has decided: {ban_entry.user.name} deserves redemption!"
+                ]
+
+                # Special message if Mandar is doing the unbanning
+                if ctx.author.id == 745881713661575209:
                     unban_messages = [
-                        f"{ban_entry.user.name} has been given a second chance! As usual.",
-                        f"{ctx.author.name} simps for {ban_entry.user.name}",
-                        f"The ban has been lifted for {ban_entry.user.name}. Probably begged Plazo",
-                        f"{ban_entry.user.name} managed to convince {ctx.author.name} to unban!",
-                        f"Looks like {ban_entry.user.name} finally apologized enough to get unbanned!",
-                        f"The council has decided: {ban_entry.user.name} deserves redemption!"
+                        f"Mandar simps for {ban_entry.user.name}!",
+                        f"{ban_entry.user.name} agreed to find a GF for Mandar.",
+                        f"{ban_entry.user.name} bought Mandar a Eula bodypillow ;)",
+                        f"Mandar has decided {ban_entry.user.name} deserves another chance. Probably bought welkin for him."
                     ]
 
-                    # Special message if Mandar is doing the unbanning
-                    if ctx.author.id == 745881713661575209:
-                        unban_messages = [
-                            f"Mandar simps for {ban_entry.user.name}!",
-                            f"{ban_entry.user.name} agreed to find a GF for Mandar.",
-                            f"{ban_entry.user.name} bought Mandar a Eula bodypillow ;)",
-                            f"Mandar has decided {ban_entry.user.name} deserves another chance. Probably bought welkin for him."
-                        ]
-
-                    random_message = random.choice(unban_messages)
-                    await ctx.send(random_message)
-                    return
-
-        await ctx.send(f"Could not find a banned user with the name or ID: {member}")
+                random_message = random.choice(unban_messages)
+                await ctx.send(random_message)
+                return
+            else:
+                await ctx.send(f"Could not find a banned user with the name or ID: {member}")
 
     except ValueError:
         await ctx.send("Invalid format. Use either a User ID or Username#Discriminator format.")
