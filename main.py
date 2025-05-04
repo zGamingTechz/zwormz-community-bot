@@ -505,6 +505,10 @@ async def wolfer(ctx):
 @bot.command(name='kick')
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, member: discord.Member, *, reason=None):
+    if member.id == ctx.author.id:
+        await ctx.send(f"What kinda kink is that?")
+        return
+
     if member.id == 358634118965231626 or member.id == 745881713661575209 or member.id == 638091868948922409:
         await ctx.send(f"You don't have the balls to kick {member.name}")
         return
