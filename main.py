@@ -569,5 +569,73 @@ async def kick_error(ctx, error):
         await ctx.send(f"An error occurred: {error}")
 
 
+@bot.command(name='ban')
+@commands.has_permissions(ban_members=True)
+async def ban(ctx, member: discord.Member, *, reason=None):
+    if member.id == 358634118965231626 or member.id == 745881713661575209 or member.id == 638091868948922409:
+        await ctx.send(f"{ctx.author.name}'s balls punctured while trying to ban {member.name}")
+        return
+    elif member.guild_permissions.kick_members or member.guild_permissions.ban_members:
+        await ctx.send(f"Nice try, {ctx.author.mention}, but unfortunately {member.display_name} is a mod. Better luck next time.")
+        return
+
+    if ctx.author.id == 745881713661575209:
+        ban_messages = [
+            f"Mandar finally had enough of {member.name}'s nonsense",
+            f"{member.name} questioned Mandar's gacha luck and paid the price",
+            f"Mandar complained to Quietmoment about {member.name}",
+            f"Mandar flexed his Genshin characters on {member.name} too hard.",
+            f"{member.name} was crushed between Eula's thighs",
+            f"Mandar punched {member.name} off the Enderman farm",
+        ]
+    else:
+        # List of random ban messages
+        ban_messages = [
+            f"{member.name} was banished to the backrooms!",
+            f"The banhammer has spoken! {member.name} is out forever! or maybe Plazo can help..",
+            f"{ctx.author.name} decided {member.name} needed to touch some grass",
+            f"{member.name} was banned faster than Kutmin can post free games in #💶free-games💶",
+            f"{member.name} will have to find another server to shit in now.",
+            f"Member count permanently decreased by one: {member.name} is gone!",
+            f"{member.name} has been banned! Maybe they can beg Kryzzp for forgiveness.",
+            f"{member.name} got hit with the ban hammer by {ctx.author.name}. Critical hit!",
+            f"Kryzzp ordered {ctx.author.name} to permanently remove {member.name}",
+            f"{member.name} messed with the wrong server!",
+            f"{member.name} found out what happens when you mess with Plazo!",
+            f"The almighty {ctx.author.name} has cast {member.name} into oblivion!",
+            f"{member.name} is now banned! Press F to pay respects (or not)."
+        ]
+
+    random_message = random.choice(ban_messages)
+
+    try:
+        # Try to DM the user
+        await member.send(
+            f"You've been banned from {ctx.guild.name}. Reason: {reason if reason else 'No reason provided.'}\nLmaoo, imagine getting banned. lolololol")
+    except:
+        pass
+
+    try:
+        await member.ban(reason=reason)
+        await ctx.send(random_message)
+
+        if reason:
+            await ctx.send(f"Reason: {reason}")
+    except:
+        await ctx.send(f"I don't have permission to ban {member.mention}.")
+
+
+@ban.error
+async def ban_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"Lmfaoo, {ctx.author.name} thinks his tiny hands are powerful enough to wield the ban hammer.")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Air has been banned successfully, now die.")
+    elif isinstance(error, commands.BadArgument):
+        await ctx.send("If you're gonna ban them at least mention their name correctly. Who tf is that?")
+    else:
+        await ctx.send(f"An error occurred: {error}")
+
+
 keep_alive()
 bot.run(TOKEN)
