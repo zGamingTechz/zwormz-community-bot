@@ -501,5 +501,65 @@ async def wolfer(ctx):
     await ctx.send("Good Boi Good Mod")
 
 
+# Admin Commands
+@bot.command(name='kick')
+@commands.has_permissions(kick_members=True)
+async def kick(ctx, member: discord.Member, *, reason=None):
+    if ctx.author.id == 745881713661575209:
+        # List of random kick messages
+        kick_messages = [
+            f"Mandar complained to Quietmoment about {member.name}",
+            f"Mandar flexed his Genshin characters on {member.name} too hard.",
+            f"{member.name} was crushed between Eula's thighs",
+            f"Mandar punched {member.name} off the Endermen farm",
+        ]
+    else:
+        # List of random kick messages
+        kick_messages = [
+            f"{member.name} was yeeted from the server!",
+            f"Goodbye {member.name}! You'll be missed... maybe.",
+            f"{ctx.author.name} didn't like {member.name}",
+            f"The ban hammer has spoken! {member.name} is out!",
+            f"{member.name} was kicked faster than you can say 'oops'!",
+            f"Another one bites the dust! Farewell, {member.name}!",
+            f"{member.name} will have to play elsewhere now.",
+            f"Server population decreased by one: {member.name} is gone!",
+            f"{member.name} has been kicked! Maybe they can talk to Plazo about it. iykyk ;)",
+            f"{member.name} got kicked inn the nuts by {ctx.author.name}. Ouch!",
+            f"Kryzzp told {ctx.author.name} to kick {member.name}",
+            f"{member.name} sacked the roooock!!!!!!",
+        ]
+
+    random_message = random.choice(kick_messages)
+
+    try:
+        # Try to DM the user
+        await member.send(
+            f"You've been kicked from {ctx.guild.name}. Reason: {reason if reason else 'No reason provided.'}\nGet better dude. Sucks to be you.")
+    except:
+        pass
+
+    try:
+        await member.kick(reason=reason)
+        await ctx.send(random_message)
+
+        if reason:
+            await ctx.send(f"Reason: {reason}")
+    except:
+        await ctx.send(f"I don't have permission to kick {member.mention}.")
+
+
+@kick.error
+async def kick_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"Lmaoo, {ctx.author.name} thinks he has mod perms.")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("I can't kick air, can I?.")
+    elif isinstance(error, commands.BadArgument):
+        await ctx.send("There's none by that name bruh.")
+    else:
+        await ctx.send(f"An error occurred: {error}")
+
+
 keep_alive()
 bot.run(TOKEN)
