@@ -7,7 +7,7 @@ import asyncio
 from bot_token import token
 
 # Bot setup with command prefix and intents
-bot = commands.Bot(command_prefix="%", intents=discord.Intents.all(), help_command=None)
+bot = commands.Bot(command_prefix="%%", intents=discord.Intents.all(), help_command=None)
 TOKEN = token
 
 # Snipe message storage
