@@ -721,7 +721,7 @@ async def mute(ctx, *, member: discord.Member):
         return
 
     if muted_role in member.roles:
-        await ctx.send(f"{member.name} is already muted. What's your problem man?.")
+        await ctx.send(f"{member.name} is already muted. What's your problem man?")
         return
 
     await member.add_roles(muted_role)
@@ -752,6 +752,48 @@ async def mute_error(ctx, error):
         await ctx.send("*Cuts off your ear so you cannot hear the wind*")
     else:
         await ctx.send(f"An unknown error occurred: {error}")
+
+
+@bot.command(name='unmute')
+@commands.has_permissions(manage_roles=True)
+async def unmute(ctx, *, member: discord.Member):
+    muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
+    if not muted_role:
+        await ctx.send("Muted role doesn't exist. Try unmuting air instead.")
+        return
+
+    if muted_role not in member.roles:
+        await ctx.send(f"{member.name} is not muted. You good, {ctx.author.name}?")
+        return
+
+    await member.remove_roles(muted_role)
+
+    unmute_messages = [
+        f"{member.name} is free to scream again. Thanks, {ctx.author.name}?",
+        f"{ctx.author.name} gave {member.name} back their voice. Brave move.",
+        f"{member.name} was unmuted. Peace was short-lived.",
+        f"{ctx.author.name} unmuted {member.name}. Let chaos resume.",
+        f"{member.name} can talk again. Time to regret that soon."
+    ]
+
+    if ctx.author.id == 745881713661575209:
+        unmute_messages = [
+            f"Mandar unmuted {member.name}. Must be love.",
+            f"Mandar brought {member.name} back from Quietmoment's company.",
+            f"{member.name} bribed Mandar with primogems to get unmuted.",
+            f"Mandar granted {member.name} the power of speech again. Praise be."
+        ]
+
+    await ctx.send(random.choice(unmute_messages))
+
+@unmute.error
+async def unmute_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"Maybe request Plazo?")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Unmute who? The ghost of your dignity?")
+    else:
+        await ctx.send(f"Something broke: {error}")
 
 
 keep_alive()
