@@ -700,5 +700,59 @@ async def unban_error(ctx, error):
         await ctx.send(f"An error occurred: {error}")
 
 
+@bot.command(name='mute')
+@commands.has_permissions(manage_roles=True)
+async def mute(ctx, *, member: discord.Member):
+    if member.id == ctx.author.id:
+        await ctx.send(f"You know you can just stfu?")
+        return
+
+    if member.id == 358634118965231626 or member.id == 745881713661575209 or member.id == 638091868948922409:
+        await ctx.send(f"{ctx.author.name} is too short to tape {member.name}'s mouth")
+        return
+    elif member.guild_permissions.kick_members or member.guild_permissions.ban_members:
+        await ctx.send(
+            f"Nice try, {ctx.author.mention}, but you cannot mute a mod (I'd suggest removing their mod first, ehe)")
+        return
+
+    muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
+    if not muted_role:
+        await ctx.send("Muted role doesn't exist. Create one called `Muted` and try again.")
+        return
+
+    if muted_role in member.roles:
+        await ctx.send(f"{member.name} is already muted. What's your problem man?.")
+        return
+
+    await member.add_roles(muted_role)
+
+    mute_messages = [
+        f"{member.name} has been muted. Too loud, maybe?",
+        f"{member.name} got bonked with the mute hammer by {ctx.author.name}.",
+        f"{ctx.author.name} said: 'Shut up, {member.name}' (in a nice way ofc).",
+        f"{member.name} told {ctx.author.name} to shut up. Ohh look how the tables have turned.",
+        f"{member.name} is now mute. Chat is peaceful again.",
+    ]
+
+    if ctx.author.id == 745881713661575209:
+        mute_messages = [
+            f"Mandar muted {member.name} with love ❤️",
+            f"{member.name} said bad things about Eula, Mandar took it personally.",
+            f"Mandar’s silence spell worked. {member.name} is now quiet.",
+            f"{member.name} got muted for asking Mandar to touch grass."
+        ]
+
+    await ctx.send(random.choice(mute_messages))
+
+@mute.error
+async def mute_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"How about you stfu instead?.")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("*Cuts off your ear so you cannot hear the wind*")
+    else:
+        await ctx.send(f"An unknown error occurred: {error}")
+
+
 keep_alive()
 bot.run(TOKEN)
