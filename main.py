@@ -146,7 +146,7 @@ async def help_command(ctx):
     embed.add_field(name="%prefix", value="Just In Case You're Still Wondering", inline=False)
     embed.add_field(name="%staff", value="A List Of All Staff Members", inline=False)
     embed.add_field(name="%yt", value="Link To Kryzzp's Youtube", inline=False)
-    embed.add_field(name="%play_guess", value="To Play A Number Guessing Game\nOnly Works In <#710259442318442518>",
+    embed.add_field(name="%play guess", value="To Play A Number Guessing Game\nOnly Works In <#710259442318442518>",
                     inline=False)
     embed.add_field(name="Other Features-", value="-Custom Member Based Commands Gotta Figure Them Out Yourself",
                     inline=False)
@@ -260,8 +260,14 @@ async def convert(ctx):
         await ctx.send("Timed out. Please try again.")
 
 
+@bot.group()
+async def play(ctx):
+    if ctx.invoked_subcommand is None:
+        await ctx.send('Use `%play guess` to play.')
+
+
 # Guessing game command
-@bot.command(name='play_guess')
+@play.command(name='guess')
 async def play_guess(ctx):
     channel = ctx.channel.id
 
