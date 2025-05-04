@@ -560,7 +560,6 @@ async def kick(ctx, member: discord.Member, *, reason=None):
     except:
         await ctx.send(f"I don't have permission to kick {member.mention}.")
 
-
 @kick.error
 async def kick_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
@@ -576,6 +575,10 @@ async def kick_error(ctx, error):
 @bot.command(name='ban')
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
+    if member.id == ctx.author.id:
+        await ctx.send(f"You know you can just leave?")
+        return
+
     if member.id == 358634118965231626 or member.id == 745881713661575209 or member.id == 638091868948922409:
         await ctx.send(f"{ctx.author.name}'s balls punctured while trying to ban {member.name}")
         return
@@ -627,7 +630,6 @@ async def ban(ctx, member: discord.Member, *, reason=None):
             await ctx.send(f"Reason: {reason}")
     except:
         await ctx.send(f"I don't have permission to ban {member.mention}.")
-
 
 @ban.error
 async def ban_error(ctx, error):
