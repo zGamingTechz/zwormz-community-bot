@@ -5,6 +5,7 @@ from keep_alive import keep_alive
 import csv
 import asyncio
 from bot_token import token
+from typing import Union
 import datetime
 
 # Bot setup with command prefix and intents
@@ -580,62 +581,85 @@ async def kick_error(ctx, error):
 
 @bot.command(name='ban')
 @commands.has_permissions(ban_members=True)
-async def ban(ctx, member: discord.Member, *, reason=None):
-    if member.id == ctx.author.id:
-        await ctx.send(f"You know you can just leave?")
+async def ban(ctx, target: Union[discord.Member, int], *, reason=None):
+    guild = ctx.guild
+    member = None
+    member_id = None
+
+    # Determine if input is a user object or ID
+    if isinstance(target, int):
+        member_id = target
+        member = guild.get_member(member_id)
+    else:
+        member = target
+        member_id = member.id
+
+    if ctx.author.id == member_id:
+        await ctx.send("You know you can just leave?")
         return
 
-    if member.id == 358634118965231626 or member.id == 745881713661575209 or member.id == 638091868948922409:
-        await ctx.send(f"{ctx.author.name}'s balls punctured while trying to ban {member.name}")
+    # Protected users
+    protected_ids = [358634118965231626, 745881713661575209, 638091868948922409]
+    if member_id in protected_ids:
+        name = member.name if member else f"User with ID {member_id}"
+        await ctx.send(f"{ctx.author.name}'s balls punctured while trying to ban {name}")
         return
-    elif member.guild_permissions.kick_members or member.guild_permissions.ban_members:
+    elif member and (member.guild_permissions.kick_members or member.guild_permissions.ban_members):
         await ctx.send(f"Nice try, {ctx.author.mention}, but unfortunately {member.display_name} is a mod. Better luck next time.")
         return
 
+    # Ban messages
+    if member:
+        name = member.name
+    else:
+        try:
+            user = await bot.fetch_user(member_id)
+            name = user.name
+        except:
+            name = f"User with ID {member_id}"
     if ctx.author.id == 745881713661575209:
         ban_messages = [
-            f"Mandar finally had enough of {member.name}'s nonsense",
-            f"{member.name} questioned Mandar's gacha luck and paid the price",
-            f"Mandar complained to Quietmoment about {member.name}",
-            f"Mandar flexed his Genshin characters on {member.name} too hard.",
-            f"{member.name} was crushed between Eula's thighs",
-            f"Mandar punched {member.name} off the Enderman farm",
+            f"Mandar finally had enough of {name}'s nonsense",
+            f"{name} questioned Mandar's gacha luck and paid the price",
+            f"Mandar complained to Quietmoment about {name}",
+            f"Mandar flexed his Genshin characters on {name} too hard.",
+            f"{name} was crushed between Eula's thighs",
+            f"Mandar punched {name} off the Enderman farm",
         ]
     else:
-        # List of random ban messages
         ban_messages = [
-            f"{member.name} was banished to the backrooms!",
-            f"The banhammer has spoken! {member.name} is out forever! or maybe Plazo can help..",
-            f"{ctx.author.name} decided {member.name} needed to touch some grass",
-            f"{member.name} was banned faster than Kutmin can post free games in #💶free-games💶",
-            f"{member.name} will have to find another server to shit in now.",
-            f"Member count permanently decreased by one: {member.name} is gone!",
-            f"{member.name} has been banned! Maybe they can beg Kryzzp for forgiveness.",
-            f"{member.name} got hit with the ban hammer by {ctx.author.name}. Critical hit!",
-            f"Kryzzp ordered {ctx.author.name} to permanently remove {member.name}",
-            f"{member.name} messed with the wrong server!",
-            f"{member.name} found out what happens when you mess with Plazo!",
-            f"The almighty {ctx.author.name} has cast {member.name} into oblivion!",
-            f"{member.name} is now banned! Press F to pay respects (or not)."
+            f"{name} was banished to the backrooms!",
+            f"The banhammer has spoken! {name} is out forever! or maybe Plazo can help..",
+            f"{ctx.author.name} decided {name} needed to touch some grass",
+            f"{name} was banned faster than Kutmin can post free games in #💶free-games💶",
+            f"{name} will have to find another server to shit in now.",
+            f"Member count permanently decreased by one: {name} is gone!",
+            f"{name} has been banned! Maybe they can beg Kryzzp for forgiveness.",
+            f"{name} got hit with the ban hammer by {ctx.author.name}. Critical hit!",
+            f"Kryzzp ordered {ctx.author.name} to permanently remove {name}",
+            f"{name} messed with the wrong server!",
+            f"{name} found out what happens when you mess with Plazo!",
+            f"The almighty {ctx.author.name} has cast {name} into oblivion!",
+            f"{name} is now banned! Press F to pay respects (or not)."
         ]
 
     random_message = random.choice(ban_messages)
 
-    try:
-        # Try to DM the user
-        await member.send(
-            f"You've been banned from {ctx.guild.name}. Reason: {reason if reason else 'No reason provided.'}\nLmaoo, imagine getting banned. lolololol")
-    except:
-        pass
+    # Try to DM if member is in guild
+    if member:
+        try:
+            await member.send(f"You've been banned from {ctx.guild.name}. Reason: {reason or 'No reason provided.'}")
+        except:
+            pass
 
+    # Ban using member or Object
     try:
-        await member.ban(reason=reason)
+        await guild.ban(member or discord.Object(id=member_id), reason=reason)
         await ctx.send(random_message)
-
         if reason:
             await ctx.send(f"Reason: {reason}")
-    except:
-        await ctx.send(f"I don't have permission to ban {member.mention}.")
+    except Exception as e:
+        await ctx.send(f"Failed to ban user. Error: `{str(e)}`")
 
 @ban.error
 async def ban_error(ctx, error):
