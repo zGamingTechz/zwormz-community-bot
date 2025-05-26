@@ -397,8 +397,7 @@ async def farts(ctx):
 
 @bot.command(name='jenny')
 async def jenny(ctx):
-    embed = discord.Embed(title="Jenny", description="Silliest programmer girl (farts didn't ask for it)",
-                          color=0x9b59b6)
+    embed = discord.Embed(title="Jenny", description="Silliest programmer girl (farts didn't ask for it)", color=0x9b59b6)
     embed.add_field(name="Bday", value="5th Nov", inline=False)
     await ctx.send(embed=embed)
 
