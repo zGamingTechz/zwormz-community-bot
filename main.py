@@ -84,6 +84,10 @@ async def on_message(message):
     if msg == '.':
         await message.channel.send("...")
 
+    # Check if someone doesn't use zwz bot
+    if msg.startswith("?ban") or msg.startswith("?kick") or msg.startswith("?mute") or msg.startswith("?warn"):
+        await message.channel.send("I hope your pillow stays hot on both sides")
+
     # Process commands after our message handling
     await bot.process_commands(message)
 
@@ -868,30 +872,6 @@ async def unmute_error(ctx, error):
             await log_channel.send(embed=embed)
     else:
         await ctx.send(f"Something broke: {error}")
-
-
-# Check if someone doesn't use zwz bot
-@bot.event
-async def on_member_ban(guild, user):
-    async for entry in guild.audit_logs(limit=1, action=discord.AuditLogAction.ban):
-        channel = bot.get_channel(790293324124520488)
-        if entry.target.id == user.id and entry.user != bot.user:
-            traitor = entry.user
-            if not traitor.bot:
-                await channel.send(f"{traitor.mention} really didn't consider using zwz bot to ban {user.name}?")
-            elif traitor.bot:
-                await channel.send(f"Someone really didn't consider using zwz bot to ban {user.name} tsk, tsk, tsk..")
-
-@bot.event
-async def on_member_remove(guild, user):
-    async for entry in guild.audit_logs(limit=1, action=discord.AuditLogAction.ban):
-        channel = bot.get_channel(790293324124520488)
-        if entry.target.id == user.id and entry.user != bot.user:
-            traitor = entry.user
-            if not traitor.bot:
-                await channel.send(f"{traitor.mention} really didn't consider using zwz bot to kick {user.name}'s ass?")
-            elif traitor.bot:
-                await channel.send(f"Someone really didn't consider using zwz bot to kick {user.name}'s ass. tsk, tsk, tsk..")
 
 
 keep_alive()
