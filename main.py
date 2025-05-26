@@ -870,5 +870,18 @@ async def unmute_error(ctx, error):
         await ctx.send(f"Something broke: {error}")
 
 
+# Check if someone doesn't use zwz bot
+@bot.event
+async def on_member_ban(guild, user):
+    async for entry in guild.audit_logs(limit=1, action=discord.AuditLogAction.ban):
+        channel = bot.get_channel(790293324124520488)
+        if entry.target.id == user.id and entry.user != bot.user:
+            traitor = entry.user
+            if not traitor.bot:
+                await channel.send(f"{traitor.mention} really didn't consider using zwz bot to ban {user.name}?")
+            elif traitor.bot:
+                await channel.send(f"Someone really didn't consider using zwz bot to ban {user.name} tsk, tsk, tsk..")
+
+
 keep_alive()
 bot.run(TOKEN)
