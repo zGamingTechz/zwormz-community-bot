@@ -5,6 +5,7 @@ from keep_alive import keep_alive
 import csv
 import asyncio
 from bot_token import token
+import datetime
 
 # Bot setup with command prefix and intents
 bot = commands.Bot(command_prefix="%%", intents=discord.Intents.all(), help_command=None)
@@ -815,8 +816,14 @@ async def warn(ctx, member: discord.Member, *, reason="No reason provided"):
         pass
 
     log_channel = bot.get_channel(1376678099856658584)
+    log_embed = discord.Embed(title="⚠️ Warning Issued", color=discord.Color.orange())
+    log_embed.add_field(name="Warned User", value=member.mention, inline=False)
+    log_embed.add_field(name="Reason", value=reason, inline=False)
+    log_embed.add_field(name="Warned By", value=ctx.author.mention, inline=False)
+    log_embed.add_field(name="Date", value=f"{datetime.datetime.now().day} {datetime.datetime.now().strftime('%B')} {datetime.datetime.now().year}", inline=False)
+    log_embed.set_footer(text="Does anyone even give a shit about warns?")
     if log_channel:
-        await log_channel.send(embed=embed)
+        await log_channel.send(embed=log_embed)
 
 
 keep_alive()
