@@ -798,5 +798,26 @@ async def unmute_error(ctx, error):
         await ctx.send(f"Something broke: {error}")
 
 
+@bot.command(name='warn')
+@commands.has_permissions(manage_messages=True)
+async def warn(ctx, member: discord.Member, *, reason="No reason provided"):
+    embed = discord.Embed(title="⚠️ Warning Issued", color=discord.Color.orange())
+    embed.add_field(name="Warned User", value=member.mention, inline=False)
+    embed.add_field(name="Reason", value=reason, inline=False)
+    embed.add_field(name="Warned By", value=ctx.author.mention, inline=False)
+    embed.set_footer(text="Consider shutting the fuck up to avoid further action.")
+
+    await ctx.send(embed=embed)
+
+    try:
+        await member.send(embed=embed)
+    except:
+        pass
+
+    log_channel = bot.get_channel(1376678099856658584)
+    if log_channel:
+        await log_channel.send(embed=embed)
+
+
 keep_alive()
 bot.run(TOKEN)
