@@ -825,6 +825,26 @@ async def warn(ctx, member: discord.Member, *, reason="No reason provided"):
     if log_channel:
         await log_channel.send(embed=log_embed)
 
+@warn.error
+async def unmute_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"Get Mod First")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        embed = discord.Embed(title="⚠️ Warning Issued", color=discord.Color.orange())
+        embed.add_field(name="Warned User", value=ctx.author.mention, inline=False)
+        embed.add_field(name="Reason", value="Forgot to mention the user and wasted my time", inline=False)
+        embed.add_field(name="Warned By", value=ctx.author.mention, inline=False)
+        embed.set_footer(text="Consider double checking the command before sending.")
+
+        await ctx.send(embed=embed)
+
+        log_channel = bot.get_channel(1376678099856658584)
+        if log_channel:
+            embed.add_field(name="Date", value=f"{datetime.datetime.now().day} {datetime.datetime.now().strftime('%B')} {datetime.datetime.now().year}", inline=False)
+            await log_channel.send(embed=embed)
+    else:
+        await ctx.send(f"Something broke: {error}")
+
 
 keep_alive()
 bot.run(TOKEN)
